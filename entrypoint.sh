@@ -37,5 +37,7 @@ fi
 echo "🚀 Starting llama-server..."
 exec /opt/llama/llama-server \
   --host 0.0.0.0 \
+  -fa on \
+  -ngl 100 \
   --port 9000 \
   --model "$MODEL_PATH"
