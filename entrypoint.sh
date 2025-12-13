@@ -26,6 +26,14 @@ else
   ls -lh "$MODEL_PATH"
 fi
 
+# Debug Vulkan sebelum start server
+echo "🔧 Debug Vulkan devices..."
+if command -v vulkaninfo >/dev/null 2>&1; then
+  vulkaninfo | grep -E "GPU id|deviceName|vendorID" || echo "⚠️ Vulkan installed but no devices found"
+else
+  echo "⚠️ vulkaninfo not found, cannot debug Vulkan"
+fi
+
 echo "🚀 Starting llama-server..."
 exec /opt/llama/llama-server \
   --host 0.0.0.0 \
