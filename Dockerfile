@@ -2,7 +2,7 @@ FROM ubuntu:22.04
 
 # Install runtime deps
 RUN apt-get update && apt-get install -y \
-    ca-certificates curl tar unzip gzip && \
+    ca-certificates curl tar unzip gzip vulkan-utils mesa-vulkan-drivers libvulkan1 && \
     rm -rf /var/lib/apt/lists/*
 
 # Download prebuilt llama.cpp binaries
