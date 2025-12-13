@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM nvidia/cuda:13.0.0-runtime-ubuntu22.04
 
 # Install runtime deps
 RUN apt-get update && \
