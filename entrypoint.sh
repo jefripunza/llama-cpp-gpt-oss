@@ -39,5 +39,6 @@ exec /opt/llama/llama-server \
   --host 0.0.0.0 \
   -fa on \
   -ngl 100 \
+  --device vulkan \
   --port 9000 \
   --model "$MODEL_PATH"

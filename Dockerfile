@@ -14,7 +14,7 @@ ENV LLAMA_RELEASE="b7380"
 RUN mkdir -p /opt/llama && \
     cd /opt/llama && \
     curl -L \
-      https://github.com/ggml-org/llama.cpp/releases/download/${LLAMA_RELEASE}/llama-${LLAMA_RELEASE}-bin-ubuntu-vulkan-x64.tar.gz \
+      https://github.com/ggml-org/llama.cpp/releases/download/${LLAMA_RELEASE}/llama-${LLAMA_RELEASE}-bin-ubuntu-x64.tar.gz \
       -o llama-${LLAMA_RELEASE}-bin.tar.gz && \
     tar -xzf llama-${LLAMA_RELEASE}-bin.tar.gz && \
     rm llama-${LLAMA_RELEASE}-bin.tar.gz
