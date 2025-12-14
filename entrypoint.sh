@@ -38,7 +38,6 @@ echo "🚀 Starting llama-server..."
 exec /opt/llama/llama-server \
   --host 0.0.0.0 \
   --port 9000 \
-  --no-rpc \
   --threads 20
   # --ctx-size 4096 \
   # -fa on \

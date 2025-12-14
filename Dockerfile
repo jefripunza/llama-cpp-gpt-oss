@@ -23,6 +23,8 @@ RUN mkdir -p /opt/llama && \
 RUN mv /opt/llama /opt/llama-target
 RUN mv /opt/llama-target/llama-${LLAMA_RELEASE} /opt/llama
 
+RUN rm -f /opt/llama/libggml-rpc.so
+
 # Check ...
 # RUN ls -l /opt/llama && sleep 10
 
