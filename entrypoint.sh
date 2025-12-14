@@ -43,4 +43,4 @@ exec /opt/llama/llama-server \
   # -fa on \
   # -ngl 100 \
   # --device vulkan \
-  --model "$MODEL_PATH"
+  -m "$MODEL_PATH"
