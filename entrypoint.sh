@@ -34,7 +34,7 @@ else
   echo "⚠️ vulkaninfo not found, cannot debug Vulkan"
 fi
 
-echo "🚀 Starting llama-server with context size 8192..."
+echo "🚀 Starting llama-server with context size 16384..."
 echo "📊 Model info:"
 /app/llama-server --version || echo "Version check failed"
 
@@ -43,11 +43,8 @@ exec /app/llama-server \
   --n-gpu-layers 100 \
   --host 0.0.0.0 \
   --port 11444 \
-  --parallel 5 \
-  -c 8192 \
-  -n 2048 \
-  --rope-scaling yarn \
-  --rope-freq-base 10000 \
-  --rope-freq-scale 1.0 \
+  --parallel 1 \
+  -c 16384 \
+  -n 4096 \
   --threads 20 \
   --verbose
