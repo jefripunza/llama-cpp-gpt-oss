@@ -35,9 +35,9 @@ else
 fi
 
 echo "🚀 Starting llama-server..."
-exec /opt/llama/llama-server \
+exec llama-server \
   --host 0.0.0.0 \
-  --port 9000 \
+  --port 11444 \
   --threads 20
   # --ctx-size 4096 \
   # -fa on \

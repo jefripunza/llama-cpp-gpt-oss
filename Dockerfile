@@ -1,4 +1,4 @@
-FROM nvidia/cuda:13.0.0-runtime-ubuntu22.04
+FROM ghcr.io/ggml-org/llama.cpp:full-cuda
 
 # Install runtime deps
 RUN apt-get update && \
@@ -9,29 +9,6 @@ RUN apt-get install -y ca-certificates curl tar unzip gzip
 RUN apt-get install -y vulkan-tools mesa-vulkan-drivers libvulkan1
 RUN rm -rf /var/lib/apt/lists/*
 
-# Download prebuilt llama.cpp binaries
-ENV LLAMA_RELEASE="b7380"
-RUN mkdir -p /opt/llama && \
-    cd /opt/llama && \
-    curl -L \
-      https://github.com/ggml-org/llama.cpp/releases/download/${LLAMA_RELEASE}/llama-${LLAMA_RELEASE}-bin-ubuntu-x64.tar.gz \
-      -o llama-${LLAMA_RELEASE}-bin.tar.gz && \
-    tar -xzf llama-${LLAMA_RELEASE}-bin.tar.gz && \
-    rm llama-${LLAMA_RELEASE}-bin.tar.gz
-
-# Rename Directory
-RUN mv /opt/llama /opt/llama-target
-RUN mv /opt/llama-target/llama-${LLAMA_RELEASE} /opt/llama
-
-RUN rm -f /opt/llama/libggml-rpc.so /opt/llama/rpc-server
-
-
-# Check ...
-# RUN ls -l /opt/llama && sleep 10
-
-# Make sure serve binary is executable
-RUN chmod +x /opt/llama/llama-server
-
 # Create models folder
 RUN mkdir -p /models
 
@@ -39,6 +16,5 @@ RUN mkdir -p /models
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-EXPOSE 9000
-
+EXPOSE 11444
 ENTRYPOINT ["/entrypoint.sh"]

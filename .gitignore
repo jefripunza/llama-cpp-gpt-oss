@@ -1,1 +1,3 @@
 docker.sh
+/models
+.DS_Store
