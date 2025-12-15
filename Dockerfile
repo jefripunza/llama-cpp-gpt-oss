@@ -1,4 +1,4 @@
-FROM ghcr.io/ggml-org/llama.cpp:full-cuda
+FROM ghcr.io/ggml-org/llama.cpp:server-cuda
 
 # Install runtime deps
 RUN apt-get update && \
