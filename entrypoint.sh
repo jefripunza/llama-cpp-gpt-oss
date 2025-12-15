@@ -41,5 +41,5 @@ exec /app/llama-server \
   --host 0.0.0.0 \
   --port 11444 \
   --parallel 5 \
-  --ctx-size 8192 \
+  -c 8192 \
   --threads 20
