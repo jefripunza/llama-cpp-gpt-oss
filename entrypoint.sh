@@ -44,7 +44,6 @@ fi
 echo "🚀 Starting llama-server..."
 exec /app/llama-server \
   -m "$MODEL_PATH" \
-  -n 512 \
-  --n-gpu-layers 1 \
+  --n-gpu-layers 100 \
   --port 11444 \
   --threads 20
