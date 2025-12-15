@@ -46,6 +46,5 @@ exec /app/llama-server \
   -m "$MODEL_PATH" \
   -n 512 \
   --n-gpu-layers 1 \
-  --host 0.0.0.0 \
   --port 11444 \
   --threads 20
