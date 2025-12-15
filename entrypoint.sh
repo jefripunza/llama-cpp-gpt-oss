@@ -34,17 +34,12 @@ else
   echo "⚠️ vulkaninfo not found, cannot debug Vulkan"
 fi
 
-# echo "List on opt folder..."
-# ls -l /opt
-# echo "List on app folder..."
-# ls -l /app
-# echo "List on models folder..."
-# ls -l /models
-
 echo "🚀 Starting llama-server..."
 exec /app/llama-server \
   -m "$MODEL_PATH" \
   --n-gpu-layers 100 \
   --host 0.0.0.0 \
   --port 11444 \
+  --parallel 5 \
+  --ctx-size 8192 \
   --threads 20
