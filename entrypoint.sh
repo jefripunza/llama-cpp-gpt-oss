@@ -34,8 +34,15 @@ else
   echo "⚠️ vulkaninfo not found, cannot debug Vulkan"
 fi
 
+echo "List on opt folder..."
+ls -l /opt
+echo "List on app folder..."
+ls -l /app
+echo "List on models folder..."
+ls -l /models
+
 echo "🚀 Starting llama-server..."
-exec llama-server \
+exec /app/full/llama-server \
   --host 0.0.0.0 \
   --port 11444 \
   --threads 20
