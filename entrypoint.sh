@@ -43,7 +43,7 @@ exec /app/llama-server \
   --n-gpu-layers 100 \
   --host 0.0.0.0 \
   --port 11444 \
-  --parallel 2 \
-  -c 16384 \
+  --parallel 5 \
+  -c 10240 \
   -n 4096 \
   --threads 20
