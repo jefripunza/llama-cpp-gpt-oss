@@ -44,6 +44,6 @@ exec /app/llama-server \
   --host 0.0.0.0 \
   --port 11444 \
   --parallel 5 \
-  -c 10240 \
+  -c 102400 \
   -n 4096 \
   --threads 20
