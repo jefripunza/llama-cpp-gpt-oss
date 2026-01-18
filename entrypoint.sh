@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 set -e
 
-MODEL_PATH="/models/ggml_llava-v1.5-7b.gguf"
+MODEL_PATH="/models/gemma-3-4b-it-UD-Q6_K_XL.gguf"
 # MODEL_URL="https://huggingface.co/giladgd/gpt-oss-20b-GGUF/resolve/main/gpt-oss-20b.MXFP4.gguf"
-MODEL_URL="https://huggingface.co/mys/ggml_llava-v1.5-7b/resolve/main/ggml-model-f16.gguf"
+# MODEL_URL="https://huggingface.co/mys/ggml_llava-v1.5-7b/resolve/main/ggml-model-f16.gguf"
+MODEL_URL="https://huggingface.co/unsloth/gemma-3-4b-it-GGUF/resolve/main/gemma-3-4b-it-UD-Q6_K_XL.gguf"
 
 if [ -z "$HF_TOKEN" ]; then
   echo "❌ ERROR: HF_TOKEN is not set!"
