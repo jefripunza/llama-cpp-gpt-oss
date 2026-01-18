@@ -6,23 +6,15 @@ shopt -s nocasematch
 # Konfigurasi
 ########################################
 
-# Directory model
 MODEL_DIR="/models"
-
-# Nama file model GGUF
 MODEL_FILENAME="${MODEL_FILENAME:-Qwen2-VL-2B-Instruct-Q4_K_M.gguf}"
+MMPROJ_FILENAME="${MMPROJ_FILENAME:-mmproj-Qwen2-VL-2B-mmproj-q5_1.gguf}"
 
-# Nama file projector multimodal (mmproj)
-MMPROJ_FILENAME="${MMPROJ_FILENAME:-mmproj-Qwen2-VL-2B-Instruct-f16.gguf}"
-
-# Repo Hugging Face untuk model & mmproj
 HF_REPO="${HF_REPO:-second-state/Qwen2-VL-2B-Instruct-GGUF}"
 
-# Full path
 MODEL_PATH="$MODEL_DIR/$MODEL_FILENAME"
 MMPROJ_PATH="$MODEL_DIR/$MMPROJ_FILENAME"
 
-# URLs
 MODEL_URL="https://huggingface.co/${HF_REPO}/resolve/main/${MODEL_FILENAME}"
 MMPROJ_URL="https://huggingface.co/${HF_REPO}/resolve/main/${MMPROJ_FILENAME}"
 
@@ -36,64 +28,64 @@ if [ -z "$HF_TOKEN" ]; then
 fi
 
 ########################################
-# Download model
+# Download model GGUF
 ########################################
 
 mkdir -p "$MODEL_DIR"
 
-if [ -f "$MODEL_PATH" ] && [ -s "$MODEL_PATH" ]; then
-  echo "✅ Model sudah ada: $MODEL_PATH"
-else
+if [ ! -s "$MODEL_PATH" ]; then
   echo "⬇️ Download model: $MODEL_URL"
   curl -L -H "Authorization: Bearer ${HF_TOKEN}" "$MODEL_URL" -o "$MODEL_PATH"
-  echo "✅ Model downloaded"
 fi
 
 ########################################
 # Download mmproj
 ########################################
 
-if [ -f "$MMPROJ_PATH" ] && [ -s "$MMPROJ_PATH" ]; then
-  echo "✅ mmproj sudah ada: $MMPROJ_PATH"
-else
+if [ ! -s "$MMPROJ_PATH" ]; then
   echo "⬇️ Attempting download mmproj: $MMPROJ_URL"
   curl -L -H "Authorization: Bearer ${HF_TOKEN}" "$MMPROJ_URL" -o "$MMPROJ_PATH" || true
-
-  if [ -f "$MMPROJ_PATH" ] && [ -s "$MMPROJ_PATH" ]; then
-    echo "✅ mmproj downloaded"
-  else
-    echo "⚠️ mmproj not found or failed to download"
-    rm -f "$MMPROJ_PATH"
-  fi
 fi
 
 ########################################
-# Vulkan debug
+# Vulkan Debug (Optional)
 ########################################
 
 echo "🔧 Debug Vulkan..."
 if command -v vulkaninfo >/dev/null 2>&1; then
   vulkaninfo | grep -E "GPU id|deviceName|vendorID" || \
-    echo "⚠️ Vulkan installed but no devices found"
-else
-  echo "⚠️ vulkaninfo not found"
+    echo "⚠️ Vulkan installed but no hardware devices detected"
 fi
 
 ########################################
-# Start server
+# Validasi mmproj
 ########################################
 
-echo "🚀 Starting llama-server"
+VALID_MMPROJ=false
+if [ -f "$MMPROJ_PATH" ] && [ -s "$MMPROJ_PATH" ]; then
+  # Cek header magic GGUF
+  MAGIC=$(head -c 4 "$MMPROJ_PATH" 2>/dev/null || echo "")
+  if [ "$MAGIC" = "GGUF" ]; then
+    echo "✅ Valid mmproj found: $MMPROJ_PATH"
+    VALID_MMPROJ=true
+  else
+    echo "⚠️ mmproj invalid format, will skip multimodal: $MMPROJ_PATH"
+  fi
+else
+  echo "⚠️ mmproj not found, image support disabled"
+fi
+
+########################################
+# Jalankan llama-server
+########################################
+
 CMD="/app/llama-server -m \"$MODEL_PATH\""
 
-if [ -f "$MMPROJ_PATH" ]; then
+if $VALID_MMPROJ; then
   CMD="$CMD --mmproj \"$MMPROJ_PATH\""
-  echo "📸 Multimodal enabled with mmproj: $MMPROJ_PATH"
-else
-  echo "⚠️ Multimodal projector mmproj NOT available — image support disabled"
 fi
 
 CMD="$CMD --host 0.0.0.0 --port 11444 --n-gpu-layers 100 -c 102400 -n 8192 --threads 20 --parallel 5"
 
-echo "$CMD"
+echo "🚀 Starting llama-server"
 exec bash -c "$CMD"
