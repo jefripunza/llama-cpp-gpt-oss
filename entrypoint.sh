@@ -10,19 +10,19 @@ MODEL_DIR="/models"
 
 MODEL_FILENAME="${MODEL_FILENAME:-Qwen2-VL-2B-Instruct-Q4_K_M.gguf}"
 
-# mmproj fallback sumber yang valid
-MMPROJ_FILENAME="${MMPROJ_FILENAME:-Qwen2-VL-2B-mmproj-q5_1.gguf}"
-MMPROJ_FALLBACK_REPO="koboldcpp/mmproj"
+# mmproj: pakai versi f32 yang benar
+MMPROJ_FILENAME="${MMPROJ_FILENAME:-mmproj-Qwen2-VL-2B-Instruct-f32.gguf}"
 
 # Repo utama model
-HF_REPO="${HF_REPO:-second-state/Qwen2-VL-2B-Instruct-GGUF}"
+HF_MODEL_REPO="${HF_MODEL_REPO:-second-state/Qwen2-VL-2B-Instruct-GGUF}"
 
 MODEL_PATH="$MODEL_DIR/$MODEL_FILENAME"
 MMPROJ_PATH="$MODEL_DIR/$MMPROJ_FILENAME"
 
-MODEL_URL="https://huggingface.co/${HF_REPO}/resolve/main/${MODEL_FILENAME}"
-MMPROJ_URL="https://huggingface.co/${HF_REPO}/resolve/main/${MMPROJ_FILENAME}"
-MMPROJ_FALLBACK_URL="https://huggingface.co/${MMPROJ_FALLBACK_REPO}/resolve/main/${MMPROJ_FILENAME}"
+MODEL_URL="https://huggingface.co/${HF_MODEL_REPO}/resolve/main/${MODEL_FILENAME}"
+
+# URL mmproj f32 yang valid
+MMPROJ_URL="https://huggingface.co/bartowski/Qwen2-VL-2B-Instruct-GGUF/resolve/main/${MMPROJ_FILENAME}"
 
 ########################################
 # Cek HF_TOKEN
@@ -33,27 +33,27 @@ if [ -z "$HF_TOKEN" ]; then
 fi
 
 ########################################
-# Download model
+# Download model GGUF
 ########################################
 mkdir -p "$MODEL_DIR"
 
 if [ ! -s "$MODEL_PATH" ]; then
   echo "⬇️ Download model: $MODEL_URL"
-  curl -L -H "Authorization: Bearer ${HF_TOKEN}" "$MODEL_URL" -o "$MODEL_PATH"
+  curl -L -H "Authorization: Bearer ${HF_TOKEN}" \
+       "$MODEL_URL" -o "$MODEL_PATH"
+else
+  echo "✅ Model sudah ada: $MODEL_PATH"
 fi
 
 ########################################
-# Download mmproj (utama lalu fallback)
+# Download mmproj f32
 ########################################
 if [ ! -s "$MMPROJ_PATH" ]; then
-  echo "⬇️ Attempting download mmproj: $MMPROJ_URL"
-  curl -L -H "Authorization: Bearer ${HF_TOKEN}" "$MMPROJ_URL" -o "$MMPROJ_PATH" || true
-fi
-
-if [ ! -s "$MMPROJ_PATH" ]; then
-  echo "⚠️ mmproj from HF_REPO not found — using fallback source"
-  echo "⬇️ Download fallback mmproj: $MMPROJ_FALLBACK_URL"
-  curl -L -H "Authorization: Bearer ${HF_TOKEN}" "$MMPROJ_FALLBACK_URL" -o "$MMPROJ_PATH" || true
+  echo "⬇️ Download multimodal projector: $MMPROJ_URL"
+  curl -L -H "Authorization: Bearer ${HF_TOKEN}" \
+       "$MMPROJ_URL" -o "$MMPROJ_PATH" || true
+else
+  echo "✅ mmproj sudah ada: $MMPROJ_PATH"
 fi
 
 ########################################
@@ -68,6 +68,8 @@ if [ -f "$MMPROJ_PATH" ] && [ -s "$MMPROJ_PATH" ]; then
   else
     echo "⚠️ mmproj format invalid — skip multimodal"
   fi
+else
+  echo "⚠️ mmproj not found or empty"
 fi
 
 ########################################
