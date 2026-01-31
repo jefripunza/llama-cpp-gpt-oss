@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
-MODEL_PATH="/models/gpt-oss-20b.gguf"
-MODEL_URL="https://huggingface.co/giladgd/gpt-oss-20b-GGUF/resolve/main/gpt-oss-20b.MXFP4.gguf"
+MODEL_PATH="/models/qwen2.5-7b-instruct.gguf"
+MODEL_URL="https://huggingface.co/Qwen/Qwen2.5-7B-Instruct-GGUF/resolve/main/qwen2.5-7b-instruct-q5_k_m-00001-of-00002.gguf"
 
 if [ -z "$HF_TOKEN" ]; then
   echo "❌ ERROR: HF_TOKEN is not set!"
