@@ -2,7 +2,7 @@
 set -e
 
 MODEL_PATH="/models/qwen2.5-7b-instruct.gguf"
-MODEL_URL="https://huggingface.co/Qwen/Qwen2.5-7B-Instruct-GGUF/resolve/main/qwen2.5-7b-instruct-q5_k_m-00001-of-00002.gguf"
+MODEL_URL="https://huggingface.co/Qwen/Qwen2.5-7B-Instruct-GGUF/resolve/main/qwen2.5-7b-instruct-q4_k_m.gguf"
 
 if [ -z "$HF_TOKEN" ]; then
   echo "❌ ERROR: HF_TOKEN is not set!"
@@ -26,15 +26,7 @@ else
   ls -lh "$MODEL_PATH"
 fi
 
-# Debug Vulkan sebelum start server
-echo "🔧 Debug Vulkan devices..."
-if command -v vulkaninfo >/dev/null 2>&1; then
-  vulkaninfo | grep -E "GPU id|deviceName|vendorID" || echo "⚠️ Vulkan installed but no devices found"
-else
-  echo "⚠️ vulkaninfo not found, cannot debug Vulkan"
-fi
-
-echo "🚀 Starting llama-server with context size 16384..."
+echo " Starting llama-server with CPU-only mode..."
 echo "📊 Model info:"
 /app/llama-server --version || echo "Version check failed"
 
@@ -45,4 +37,5 @@ exec /app/llama-server \
   --parallel 5 \
   -c 102400 \
   -n 8192 \
-  --threads 20
+  --threads 20 \
+  --no-gpu
