@@ -38,4 +38,4 @@ exec /app/llama-server \
   -c 102400 \
   -n 8192 \
   --threads 20 \
-  --no-gpu
+  -ngl 0
