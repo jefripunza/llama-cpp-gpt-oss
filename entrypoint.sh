@@ -40,7 +40,6 @@ echo "📊 Model info:"
 
 exec /app/llama-server \
   -m "$MODEL_PATH" \
-  --n-gpu-layers 100 \
   --host 0.0.0.0 \
   --port 11444 \
   --parallel 5 \
